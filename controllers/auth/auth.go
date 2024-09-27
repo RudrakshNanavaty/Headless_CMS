@@ -41,8 +41,7 @@ func SignUp(c *gin.Context) {
 	saved := initializers.DB.Create(&newUser)
 	if saved.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message":       "Error saving user",
-			"error_message": saved.Error.Error(),
+			"message": "Error saving user",
 		})
 		return
 	}

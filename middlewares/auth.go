@@ -41,7 +41,6 @@ func RequireAuth(c *gin.Context) {
 	if token == nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"message": "Unauthorized",
-			"token":   token,
 		})
 		c.Abort()
 		return
