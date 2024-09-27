@@ -15,6 +15,8 @@ func main() {
 
 	var err error = nil
 
+	err = initializers.DB.AutoMigrate(&types.User{})
+
 	err = initializers.DB.AutoMigrate(&types.Type{})
 	if err != nil {
 		return

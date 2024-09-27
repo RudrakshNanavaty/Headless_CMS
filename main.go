@@ -2,7 +2,9 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"headless-cms/controllers/auth"
 	"headless-cms/initializers"
+	"headless-cms/middlewares"
 )
 
 func init() {
@@ -17,5 +19,14 @@ func main() {
 			"message": "Hello World",
 		})
 	})
+
+	r.POST("/signup", auth.SignUp)
+	r.POST("/login", auth.Login)
+	r.GET("/auth", middlewares.RequireAuth, func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "Authenticated",
+		})
+	})
+
 	r.Run()
 }
