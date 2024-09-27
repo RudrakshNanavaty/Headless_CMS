@@ -18,7 +18,7 @@ func ConnectToDB() {
 	port := os.Getenv("DB_PORT")
 	sslmode := os.Getenv("DB_SSLMODE")
 
-	var err error
+	var err error = nil
 
 	if host == "" || user == "" || password == "" || dbname == "" {
 		log.Fatalf("Error: missing database environment variables")
