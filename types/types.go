@@ -4,14 +4,13 @@ import "time"
 
 // Type table model
 type Type struct {
-	ID   uint   `json:"type_id" gorm:"primaryKey"`
+	ID   uint   `json:"type_id" gorm:"primaryKey;autoincrement"`
 	Name string `json:"name" gorm:"not null; unique"`
-	// add a field with unique tag
 }
 
 // Content table model
 type Content struct {
-	ID         uint `json:"content_id" gorm:"primaryKey"`
+	ID         uint `json:"content_id" gorm:"primaryKey;autoincrement"`
 	TypeID     uint `json:"type_id" gorm:"not null"`
 	Type       Type `gorm:"foreignKey:TypeID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 	CreatedAt  time.Time
@@ -23,7 +22,7 @@ type Content struct {
 
 // Data table model
 type Data struct {
-	ID        uint     `json:"data_id" gorm:"primaryKey"`
+	ID        uint     `json:"data_id" gorm:"primaryKey;autoincrement"`
 	ContentID uint     `json:"content_id" gorm:"not null"`
 	Text      []string `json:"text" gorm:"type:text[]"`
 	ImageUrls []string `json:"image" gorm:"type:text[]"`
@@ -35,7 +34,7 @@ type Data struct {
 
 // Attribute table model
 type Attribute struct {
-	ID        uint   `json:"attribute_id" gorm:"primaryKey"`
+	ID        uint   `json:"attribute_id" gorm:"primaryKey;autoincrement"`
 	ContentID uint   `json:"content_id" gorm:"not null"`
 	Name      string `json:"name" gorm:"not null"`
 	Value     string `json:"value" gorm:"type:jsonb"`

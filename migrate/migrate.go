@@ -3,6 +3,7 @@ package main
 import (
 	"headless-cms/initializers"
 	"headless-cms/types"
+	"log"
 )
 
 func init() {
@@ -11,9 +12,28 @@ func init() {
 }
 
 func main() {
-	initializers.DB.AutoMigrate(&types.Type{})
-	initializers.DB.AutoMigrate(&types.Content{})
-	initializers.DB.AutoMigrate(&types.Data{})
-	initializers.DB.AutoMigrate(&types.Attribute{})
-	initializers.DB.AutoMigrate(&types.Child{})
+
+	var err error = nil
+
+	err = initializers.DB.AutoMigrate(&types.Type{})
+	if err != nil {
+		return
+	}
+	err = initializers.DB.AutoMigrate(&types.Content{})
+	if err != nil {
+		return
+	}
+	err = initializers.DB.AutoMigrate(&types.Data{})
+	if err != nil {
+		return
+	}
+	err = initializers.DB.AutoMigrate(&types.Attribute{})
+	if err != nil {
+		return
+	}
+	err = initializers.DB.AutoMigrate(&types.Child{})
+	if err != nil {
+		return
+	}
+	log.Println("Migrated all tables successfully")
 }
