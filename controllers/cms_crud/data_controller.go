@@ -26,7 +26,7 @@ func addData(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
+	c.JSON(http.StatusCreated, gin.H{
 		"message": "Data saved successfully",
 		"data":    dataData,
 	})

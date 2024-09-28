@@ -27,7 +27,7 @@ func addType(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
+	c.JSON(http.StatusCreated, gin.H{
 		"message": "Type saved successfully",
 		"type":    typeData,
 	})
