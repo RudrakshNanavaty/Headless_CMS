@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
+	"headless-cms/config/roles"
 	"headless-cms/initializers"
 	"headless-cms/types"
 	"net/http"
@@ -37,6 +38,7 @@ func SignUp(c *gin.Context) {
 	newUser := types.User{
 		Username: user.Username,
 		Password: user.Password,
+		RoleType: roles.User,
 	}
 	saved := initializers.DB.Create(&newUser)
 	if saved.Error != nil {
@@ -76,8 +78,9 @@ func Login(c *gin.Context) {
 
 	// creating token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":  dbUser.ID,
-		"exp": time.Now().Add(time.Hour * 24).Unix(),
+		"id":   dbUser.ID,
+		"role": dbUser.RoleType,
+		"exp":  time.Now().Add(time.Hour * 24).Unix(),
 	})
 
 	// Sign and get the complete encoded token as a string using the secret

@@ -1,4 +1,4 @@
-package superAdmin
+package super_admin
 
 import (
 	"github.com/gin-gonic/gin"
@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func registerAdmin(c *gin.Context) {
+func RegisterAdmin(c *gin.Context) {
 	// Register admin
 	var admin struct {
 		Username string `json:"username"`
@@ -46,7 +46,7 @@ func registerAdmin(c *gin.Context) {
 	})
 }
 
-func deleteAdmin(c *gin.Context) {
+func DeleteAdmin(c *gin.Context) {
 	// Delete admin
 	var admin types.User
 	id := c.Param("id")
@@ -63,7 +63,7 @@ func deleteAdmin(c *gin.Context) {
 	})
 }
 
-func updateAdmin(c *gin.Context) {
+func UpdateAdmin(c *gin.Context) {
 	// Update admin
 	var adminData types.User
 	err := c.BindJSON(&adminData)
@@ -102,28 +102,66 @@ func updateAdmin(c *gin.Context) {
 	})
 }
 
-func getAdmin(c *gin.Context) {
-	// Get admin
-	var adminData types.User
+func GetAccount(c *gin.Context) {
+	// Get account
+	var account types.User
 	id := c.Param("id")
-	retrieved := initializers.DB.First(&adminData, id)
+	retrieved := initializers.DB.Select("id", "username", "role_type").First(&account, id)
 	if retrieved.Error != nil {
+		if retrieved.Error.Error() == "record not found" {
+			c.JSON(http.StatusNotFound, gin.H{
+				"message": "Account not found",
+			})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message":       "Error retrieving admin",
 			"error_message": retrieved.Error.Error(),
+			"data":          retrieved,
 		})
+		return
 	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Admin retrieved successfully",
-		"admin":   adminData,
+		"account": account,
 	})
 }
 
-func getAllAdmins(c *gin.Context) {
+func GetAllUsers(c *gin.Context) {
+	// Get all users
+	var users []types.User
+	retrieved := initializers.DB.Select("id", "username", "role_type").Find(&users, "role_type = ?", roles.User)
+	if retrieved.Error != nil {
+		if retrieved.Error.Error() == "record not found" {
+			c.JSON(http.StatusNotFound, gin.H{
+				"message": "No users found",
+			})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message":       "Error retrieving admins",
+			"error_message": retrieved.Error.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Admins retrieved successfully",
+		"users":   users,
+	})
+}
+
+func GetAllAdmins(c *gin.Context) {
 	// Get all admins
 	var admins []types.User
-	retrieved := initializers.DB.Find(&admins)
+	retrieved := initializers.DB.Select("id", "username", "role_type").Find(&admins, "role_type = ?", roles.Admin)
 	if retrieved.Error != nil {
+		if retrieved.Error.Error() == "record not found" {
+			c.JSON(http.StatusNotFound, gin.H{
+				"message": "No admins found",
+			})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message":       "Error retrieving admins",
 			"error_message": retrieved.Error.Error(),
@@ -135,13 +173,19 @@ func getAllAdmins(c *gin.Context) {
 	})
 }
 
-func promoteUserToAdmin(c *gin.Context) {
+func PromoteUserToAdmin(c *gin.Context) {
 	var id = c.Param("id")
 	var user types.User
 	retrieved := initializers.DB.First(&user, id)
 	if retrieved.Error != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"message": "User not found",
+		if retrieved.Error.Error() == "record not found" {
+			c.JSON(http.StatusNotFound, gin.H{
+				"message": "User not found",
+			})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Internal Server Error",
 		})
 		return
 	}
@@ -159,13 +203,19 @@ func promoteUserToAdmin(c *gin.Context) {
 	})
 }
 
-func demoteAdminToUser(c *gin.Context) {
+func DemoteAdminToUser(c *gin.Context) {
 	var id = c.Param("id")
 	var user types.User
 	retrieved := initializers.DB.First(&user, id)
 	if retrieved.Error != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"message": "User not found",
+		if retrieved.Error.Error() == "record not found" {
+			c.JSON(http.StatusNotFound, gin.H{
+				"message": "User not found",
+			})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Internal Server Error",
 		})
 		return
 	}
