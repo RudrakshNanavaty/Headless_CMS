@@ -22,6 +22,7 @@ func main() {
 
 	r.POST("/signup", auth.SignUp)
 	r.POST("/login", auth.Login)
+	r.POST("/logout", auth.Logout)
 	r.GET("/auth", middlewares.RequireAuth, func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "Authenticated",
