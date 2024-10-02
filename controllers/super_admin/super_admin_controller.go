@@ -50,6 +50,27 @@ func DeleteAdmin(c *gin.Context) {
 	// Delete admin
 	var admin types.User
 	id := c.Param("id")
+
+	// Fetch the admin by ID
+	existingUserCheck := initializers.DB.Where("id = ?", id).First(&admin)
+
+	// Check if the user was found
+	if existingUserCheck.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": "User not found.",
+		})
+		return
+	}
+
+	// Check if the user is a SuperAdmin
+	if admin.RoleType == roles.SuperAdmin {
+		c.JSON(http.StatusForbidden, gin.H{
+			"message": "Cannot delete super admin",
+		})
+		return
+	}
+
+	// Delete the admin
 	deleted := initializers.DB.Delete(&admin, id)
 	if deleted.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -58,6 +79,7 @@ func DeleteAdmin(c *gin.Context) {
 		})
 		return
 	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Admin deleted successfully",
 	})
