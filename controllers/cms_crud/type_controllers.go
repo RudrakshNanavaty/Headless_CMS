@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func addType(c *gin.Context) {
+func AddType(c *gin.Context) {
 	var typeData types.Type
 	err := c.BindJSON(&typeData)
 	if err != nil {
@@ -33,7 +33,7 @@ func addType(c *gin.Context) {
 	})
 }
 
-func getTypes(c *gin.Context) {
+func GetTypes(c *gin.Context) {
 	var typesData []types.Type
 	retrieved := initializers.DB.Find(&typesData)
 	if retrieved.Error != nil {
@@ -48,7 +48,7 @@ func getTypes(c *gin.Context) {
 	})
 }
 
-func getType(c *gin.Context) {
+func GetType(c *gin.Context) {
 	var typeData types.Type
 	id := c.Param("id")
 	retrieved := initializers.DB.First(&typeData, id)
@@ -64,7 +64,7 @@ func getType(c *gin.Context) {
 	})
 }
 
-func updateType(c *gin.Context) {
+func UpdateType(c *gin.Context) {
 	var typeData types.Type
 	id := c.Param("id")
 	err := c.BindJSON(&typeData)

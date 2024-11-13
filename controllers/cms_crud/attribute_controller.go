@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func addAttribute(c *gin.Context) {
+func AddAttribute(c *gin.Context) {
 	var attributeData types.Attribute
 	err := c.BindJSON(&attributeData)
 	if err != nil {
@@ -31,7 +31,7 @@ func addAttribute(c *gin.Context) {
 	})
 }
 
-func getAttributes(c *gin.Context) {
+func GetAttributes(c *gin.Context) {
 	var attributesData []types.Attribute
 	retrieved := initializers.DB.Find(&attributesData)
 	if retrieved.Error != nil {
@@ -46,7 +46,7 @@ func getAttributes(c *gin.Context) {
 	})
 }
 
-func getAttribute(c *gin.Context) {
+func GetAttribute(c *gin.Context) {
 	var attributeData types.Attribute
 	id := c.Param("id")
 	retrieved := initializers.DB.First(&attributeData, id)
@@ -62,7 +62,7 @@ func getAttribute(c *gin.Context) {
 	})
 }
 
-func updateAttribute(c *gin.Context) {
+func UpdateAttribute(c *gin.Context) {
 	var attributeData types.Attribute
 	err := c.BindJSON(&attributeData)
 	if err != nil {
@@ -88,7 +88,7 @@ func updateAttribute(c *gin.Context) {
 	})
 }
 
-func deleteAttribute(c *gin.Context) {
+func DeleteAttribute(c *gin.Context) {
 	var attributeData types.Attribute
 	id := c.Param("id")
 	// Delete the attribute from the database

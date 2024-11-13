@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func addContent(c *gin.Context) {
+func AddContent(c *gin.Context) {
 	var contentData types.Content
 	err := c.BindJSON(&contentData)
 	if err != nil {
@@ -33,7 +33,7 @@ func addContent(c *gin.Context) {
 	})
 }
 
-func getContents(c *gin.Context) {
+func GetContents(c *gin.Context) {
 	var contentsData []types.Content
 	retrieved := initializers.DB.Find(&contentsData)
 	if retrieved.Error != nil {
@@ -48,7 +48,7 @@ func getContents(c *gin.Context) {
 	})
 }
 
-func getContent(c *gin.Context) {
+func GetContent(c *gin.Context) {
 	var contentData types.Content
 	id := c.Param("id")
 	retrieved := initializers.DB.First(&contentData, id)
@@ -64,8 +64,9 @@ func getContent(c *gin.Context) {
 	})
 }
 
-func updateContent(c *gin.Context) {
+func UpdateContent(c *gin.Context) {
 	var contentData types.Content
+	id := c.Param("id")
 	err := c.BindJSON(&contentData)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -75,7 +76,8 @@ func updateContent(c *gin.Context) {
 		return
 	}
 	// Save the content to the database
-	saved := initializers.DB.Save(&contentData).Where("type_id = ?", contentData.TypeID)
+	//saved := initializers.DB.Save(&contentData).Where("type_id = ?", contentData.TypeID)
+	saved := initializers.DB.Model(&contentData).Where("id = ?", id).Updates(&contentData)
 
 	if saved.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -90,7 +92,7 @@ func updateContent(c *gin.Context) {
 	})
 }
 
-func deleteContent(c *gin.Context) {
+func DeleteContent(c *gin.Context) {
 	var contentData types.Content
 	err := c.BindJSON(&contentData)
 	if err != nil {
