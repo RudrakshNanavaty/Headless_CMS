@@ -36,8 +36,6 @@ func main() {
 	cmsRoutes := r.Group("/cms", middlewares.RequireAuth)
 	routes.LoadCMSCRUDRoutes(cmsRoutes)
 
-	//R.PATCH("/upload", cms_crud.UploadFile)
-
 	err := R.Run()
 	if err != nil {
 		panic(err)

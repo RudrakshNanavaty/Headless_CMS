@@ -19,7 +19,7 @@ type Content struct {
 	UpdatedAt  time.Time
 	DataID     uint        `json:"data" gorm:"foreignKey:ContentID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	Attributes []Attribute `json:"attributes" gorm:"foreignKey:ContentID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-	Children   []Content   `json:"children" gorm:"many2many:content_children;joinForeignKey:ParentID;joinReferences:ChildID"`
+	Children   []*Content  `json:"children" gorm:"many2many:content_children;joinForeignKey:ParentID;joinReferences:ChildID"`
 }
 
 // Data table model
@@ -44,6 +44,8 @@ type Attribute struct {
 
 // Child table model | Children relationship table (self-referencing Content)
 type Child struct {
-	ParentID uint `gorm:"primaryKey;foreignKey:ParentID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-	ChildID  uint `gorm:"primaryKey;foreignKey:ChildID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	ParentID uint     `json:"parent_id" gorm:"primaryKey"`
+	ChildID  uint     `json:"child_id" gorm:"primaryKey"`
+	Parent   *Content `gorm:"foreignKey:ParentID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	Child    *Content `gorm:"foreignKey:ChildID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }

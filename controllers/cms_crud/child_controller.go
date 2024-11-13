@@ -21,7 +21,9 @@ func AddChild(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":       "Error saving child",
 			"error_message": saved.Error.Error(),
+			"error":         saved.Error,
 		})
+		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
