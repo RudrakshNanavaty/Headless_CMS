@@ -11,10 +11,15 @@ func init() {
 	initializers.LoadEnvVariables()
 	initializers.ConnectToDB()
 	initializers.CreateSuperAdminIfNotExists()
+
 }
 
 func main() {
-	r := gin.Default()
+	R := gin.Default()
+
+	R.RedirectTrailingSlash = false
+
+	r := R.Group("/api/v1")
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -28,5 +33,11 @@ func main() {
 	authRoutes := r.Group("/auth")
 	routes.LoadAuthRoutes(authRoutes)
 
-	r.Run()
+	cmsRoutes := r.Group("/cms", middlewares.RequireAuth)
+	routes.LoadCMSCRUDRoutes(cmsRoutes)
+
+	err := R.Run()
+	if err != nil {
+		panic(err)
+	}
 }

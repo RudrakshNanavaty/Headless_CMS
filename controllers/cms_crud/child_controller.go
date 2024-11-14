@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func addChild(c *gin.Context) {
+func AddChild(c *gin.Context) {
 	var child types.Child
 
 	err := c.BindJSON(&child)
@@ -21,7 +21,9 @@ func addChild(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":       "Error saving child",
 			"error_message": saved.Error.Error(),
+			"error":         saved.Error,
 		})
+		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
@@ -30,11 +32,10 @@ func addChild(c *gin.Context) {
 	})
 }
 
-func getChildren(c *gin.Context) {
-	var children []types.Content
-	id := c.Param("id")
+func GetChildren(c *gin.Context) {
+	var children types.Child
 
-	retrieved := initializers.DB.Preload("Children").First(&children, id)
+	retrieved := initializers.DB.Find(&children)
 	if retrieved.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message":       "Error retrieving children",
@@ -48,7 +49,7 @@ func getChildren(c *gin.Context) {
 	})
 }
 
-func getChild(c *gin.Context) {
+func GetChild(c *gin.Context) {
 	var child types.Child
 	id := c.Param("id")
 
@@ -66,7 +67,7 @@ func getChild(c *gin.Context) {
 	})
 }
 
-func updateChild(c *gin.Context) {
+func UpdateChild(c *gin.Context) {
 	var child types.Child
 	err := c.BindJSON(&child)
 	if err != nil {
@@ -92,7 +93,7 @@ func updateChild(c *gin.Context) {
 	})
 }
 
-func deleteChild(c *gin.Context) {
+func DeleteChild(c *gin.Context) {
 	var child types.Child
 	err := c.BindJSON(&child)
 	if err != nil {

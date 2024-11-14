@@ -38,4 +38,18 @@ func main() {
 		return
 	}
 	log.Println("Migrated all tables successfully")
+	// add basic types in type table like integer, string, boolean, etc.
+	basicTypes := []types.Type{
+		{Name: "integer"},
+		{Name: "string"},
+		{Name: "boolean"},
+		{Name: "float"},
+		{Name: "date"},
+	}
+
+	for _, t := range basicTypes {
+		if err := initializers.DB.FirstOrCreate(&t, types.Type{Name: t.Name}).Error; err != nil {
+			log.Fatalf("Error adding basic type %v: %v", t.Name, err)
+		}
+	}
 }

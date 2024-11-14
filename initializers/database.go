@@ -37,4 +37,5 @@ func ConnectToDB() {
 		log.Fatalf("Error connecting to the database: %v", err)
 	}
 	log.Println("Connected to the database")
+
 }
