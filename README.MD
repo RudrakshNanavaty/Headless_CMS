@@ -1,1 +1,0 @@
-# Headless CMS developed in Golang
